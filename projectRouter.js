@@ -60,6 +60,32 @@ projectRouter.post("/", (req, res) => {
       });
     });
 });
+
+projectRouter.post("/:id/actions", (req, res) => {
+  const post = {
+    description: req.body.description,
+    notes: req.body.notes,
+    project_id: req.params.id
+  };
+  Projects.insert(post)
+    .then(action => {
+      if (!post.notes || !post.description) {
+        res.status(400).json({
+          message: "mandatory fields name and description required"
+        });
+      } else {
+        post.id = action.id;
+        res.status(200).json({
+          action
+        });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({
+        error: "This project could not be posted"
+      });
+    });
+});
 projectRouter.put("/:id", (req, res) => {
   if (!req.body.name || !req.body.description) {
     res.status(400).json({

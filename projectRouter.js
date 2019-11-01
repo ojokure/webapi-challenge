@@ -9,9 +9,9 @@ projectRouter.get("/", (req, res) => {
     .then(projects => {
       res.status(200).json(projects);
     })
-    .catch(error => {
+    .catch(() => {
       res.status(500).json({
-        message: error.message
+        error: "this content could not be retrieved"
       });
     });
 });
@@ -34,11 +34,37 @@ projectRouter.post("/", (req, res) => {
         });
       }
     })
-    .catch(error => {
+    .catch(() => {
       res.status(500).json({
-        message: error.message
+        error: "This project could not be posted"
       });
     });
 });
+projectRouter.put("/:id", (req, res) => {
+    if (!req.body.name || !req.body.description) {
+      res.status(400).json({
+        errorMessage: "Please provide name and description to edit this project."
+      });
+    } else {
+      Projects.update(req.params.id, req.body)
+        .then(updated => {
+          if (!updated) {
+            res.status(404).json({
+              message: "The project with the specified ID does not exist."
+            });
+          } else {
+            res.status(200).json({
+              updated: req.body
+            });
+          }
+        })
+        .catch(() => {
+          res.status(500).json({
+            error: "The project information could not be modified."
+          });
+        });
+    }
+  });
+
 
 module.exports = projectRouter;

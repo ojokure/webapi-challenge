@@ -36,30 +36,32 @@ actionRouter.get("/:id", (req, res) => {
     });
 });
 
-actionRouter.post("/", (req, res) => {
-  const post = {
-    description: req.body.description,
-    note: req.body.note
-  };
-  actions
-    .insert(post)
-    .then(action => {
-      if (!post.description || !post.note) {
-        res.status(400).json({
-          message: "mandatory fields note and description required"
-        });
-      } else {
-        post.id = action.id;
-        res.status(200).json({
-          action
-        });
-      }
-    })
-    .catch(() => {
-      res.status(500).json({
-        error: "This action could not be posted"
-      });
+
+
+actionRouter.put("/:id", (req, res) => {
+  if (!req.body.description || !req.body.notes) {
+    res.status(400).json({
+      errorMessage: "Please provide note and description to edit this action."
     });
+  } else {
+    Actions.update(req.params.id, req.body)
+      .then(updated => {
+        if (!updated) {
+          res.status(404).json({
+            message: "The action with the specified ID does not exist."
+          });
+        } else {
+          res.status(200).json({
+            updated: req.body
+          });
+        }
+      })
+      .catch(() => {
+        res.status(500).json({
+          error: "The action information could not be modified."
+        });
+      });
+  }
 });
 
 module.exports = actionRouter;

@@ -82,10 +82,12 @@ projectRouter.post("/:id/actions", (req, res) => {
     })
     .catch(() => {
       res.status(500).json({
-        error: "This project could not be posted"
+        error: "This action could not be posted"
       });
     });
 });
+
+
 projectRouter.put("/:id", (req, res) => {
   if (!req.body.name || !req.body.description) {
     res.status(400).json({

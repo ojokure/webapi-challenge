@@ -2,6 +2,8 @@ const express = require("express");
 
 const Projects = require("./data/helpers/projectModel");
 
+const Actions = require("./data/helpers/actionModel")
+
 const projectRouter = express.Router();
 
 projectRouter.get("/", (req, res) => {
@@ -67,7 +69,7 @@ projectRouter.post("/:id/actions", (req, res) => {
     notes: req.body.notes,
     project_id: req.params.id
   };
-  Projects.insert(post)
+  Actions.insert(post)
     .then(action => {
       if (!post.notes || !post.description) {
         res.status(400).json({

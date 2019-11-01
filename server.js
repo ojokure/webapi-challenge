@@ -1,13 +1,19 @@
-const express = require('express')
+const express = require("express");
 
-const actionRouter = require("");
+const actionRouter = require("./actionRouter");
 
-const projectRouter = require("");
+const projectRouter = require("./projectRouter");
 
-
-const helmet = require('helmet')
+const helmet = require("helmet");
 
 server.use(helmet());
-
+server.use(express.json());
+server.use("/api/actions", actionRouter);
+server.use("/api/projects", projectRouter);
+server.get("/", (req, res) => {
+  res.send(`<h2> Let's get it ! </h2>`);
+});
 
 const server = express();
+
+module.exports = server;

@@ -36,8 +36,6 @@ actionRouter.get("/:id", (req, res) => {
     });
 });
 
-
-
 actionRouter.put("/:id", (req, res) => {
   if (!req.body.description || !req.body.notes) {
     res.status(400).json({
@@ -62,6 +60,25 @@ actionRouter.put("/:id", (req, res) => {
         });
       });
   }
+});
+
+actionRouter.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  Actions.remove(id)
+    .then(deleted => {
+      if (!deleted) {
+        res.status(404).json({
+          message: "The action with the specified ID does not exist."
+        });
+      } else {
+        res.status(201).end();
+      }
+    })
+    .catch(() => {
+      res.status(500).json({
+        error: "This action could not be removed"
+      });
+    });
 });
 
 module.exports = actionRouter;
